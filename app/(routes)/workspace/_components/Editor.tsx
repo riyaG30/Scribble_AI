@@ -11,12 +11,12 @@ import Quote from "@editorjs/quote";
 import Paragraph from "@editorjs/paragraph";
 
 import { api } from "@/convex/_generated/api";
-
 import { useMutation } from "convex/react";
 
 import { toast } from "sonner";
 import { FILE } from "../../dashboard/_components/FileList";
 const Header = require("editorjs-header-with-alignment");
+
 const rawDocument = {
     time: 1550476186479,
     blocks: [
@@ -75,6 +75,7 @@ function Editor({
                         defaultAlignment: "left",
                     },
                 },
+
                 quote: {
                     class: Quote,
                     inlineToolbar: true,
