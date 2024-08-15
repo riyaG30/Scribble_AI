@@ -13,6 +13,7 @@ import Paragraph from "@editorjs/paragraph";
 import { api } from "@/convex/_generated/api";
 
 import { useMutation } from "convex/react";
+
 import { toast } from "sonner";
 import { FILE } from "../../dashboard/_components/FileList";
 const Header = require("editorjs-header-with-alignment");
@@ -110,10 +111,8 @@ function Editor({
                         document: JSON.stringify(outputData),
                     }).then(
                         (resp) => {
-                            if (resp) {
-                                console.log("toast should be there");
-                                toast("Document Updated!");
-                            }
+                            console.log("toast should be there");
+                            toast("Document Updated!");
                         },
                         (e) => {
                             toast("Server Error!");
