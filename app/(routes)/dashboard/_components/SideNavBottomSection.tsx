@@ -1,4 +1,4 @@
-// import Constant from "@/app/_constant/Constant";
+import Constant from "@/app/_constant/Constant";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -99,7 +99,7 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
 
             <h2 className="text-[12px] mt-3">
                 <strong>{totalFiles}</strong> out of{" "}
-                {/* <strong>{Constant.MAX_FREE_FILE}</strong> files used */}
+                <strong>{Constant.MAX_FREE_FILE}</strong> files used
             </h2>
             <h2 className="text-[12px] mt-1">
                 Upgrade your plan for unlimited access.
