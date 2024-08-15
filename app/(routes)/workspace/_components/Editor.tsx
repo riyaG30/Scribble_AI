@@ -6,20 +6,22 @@ import { useEffect, useRef, useState } from "react";
 // @ts-ignore
 import Checklist from "@editorjs/checklist";
 // @ts-ignore
-import Paragraph from "@editorjs/paragraph";
+import Quote from "@editorjs/quote";
 // @ts-ignore
+import Paragraph from "@editorjs/paragraph";
+
 import { api } from "@/convex/_generated/api";
 
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { FILE } from "../../dashboard/_components/FileList";
-
+const Header = require("editorjs-header-with-alignment");
 const rawDocument = {
     time: 1550476186479,
     blocks: [
         {
             data: {
-                text: "Document Name",
+                text: "Write Document Name",
                 level: 2,
             },
             id: "123",
@@ -63,20 +65,25 @@ function Editor({
              */
 
             tools: {
-                // header: {
-                //     class: Header,
-                //     shortcut: "CMD+SHIFT+H",
-                //     config: {
-                //         placeholder: "Enter a Header",
-                //     },
-                // },
-                // list: {
-                //     class: List,
-                //     inlineToolbar: true,
-                //     config: {
-                //         defaultStyle: "unordered",
-                //     },
-                // },
+                header: {
+                    class: Header,
+                    config: {
+                        placeholder: "Enter a header",
+                        levels: [2, 3, 4],
+                        defaultLevel: 3,
+                        defaultAlignment: "left",
+                    },
+                },
+                quote: {
+                    class: Quote,
+                    inlineToolbar: true,
+                    shortcut: "CMD+SHIFT+O",
+                    config: {
+                        quotePlaceholder: "Enter a quote",
+                        captionPlaceholder: "Quote's author",
+                    },
+                },
+
                 checklist: {
                     class: Checklist,
                     inlineToolbar: true,
