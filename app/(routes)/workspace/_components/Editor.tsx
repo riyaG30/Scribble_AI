@@ -2,9 +2,7 @@
 import EditorJS from "@editorjs/editorjs";
 import { useEffect, useRef, useState } from "react";
 // @ts-ignore
-import Header from "@editorjs/header";
 // @ts-ignore
-import List from "@editorjs/list";
 // @ts-ignore
 import Checklist from "@editorjs/checklist";
 // @ts-ignore
@@ -65,20 +63,20 @@ function Editor({
              */
 
             tools: {
-                header: {
-                    class: Header,
-                    shortcut: "CMD+SHIFT+H",
-                    config: {
-                        placeholder: "Enter a Header",
-                    },
-                },
-                list: {
-                    class: List,
-                    inlineToolbar: true,
-                    config: {
-                        defaultStyle: "unordered",
-                    },
-                },
+                // header: {
+                //     class: Header,
+                //     shortcut: "CMD+SHIFT+H",
+                //     config: {
+                //         placeholder: "Enter a Header",
+                //     },
+                // },
+                // list: {
+                //     class: List,
+                //     inlineToolbar: true,
+                //     config: {
+                //         defaultStyle: "unordered",
+                //     },
+                // },
                 checklist: {
                     class: Checklist,
                     inlineToolbar: true,
