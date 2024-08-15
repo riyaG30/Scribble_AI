@@ -2,19 +2,18 @@ import Constant from "@/app/_constant/Constant";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
-    DialogFooter,
-    DialogHeader,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
     DialogClose,
     DialogContent,
     DialogDescription,
+    DialogFooter,
+    DialogHeader,
     DialogTitle,
-} from "@radix-ui/react-dialog";
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Archive, Flag, Github } from "lucide-react";
 import { useState } from "react";
+import PricingDialog from "./PriceDialog";
 
 function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
     const menuList = [
@@ -61,32 +60,39 @@ function SideNavBottomSection({ onFileCreate, totalFiles }: any) {
                         New File
                     </Button>
                 </DialogTrigger>
-
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Create New File</DialogTitle>
-                        <DialogDescription>
-                            <Input
-                                placeholder="Enter File Name"
-                                className="mt-3"
-                                onChange={(e) => setFileInput(e.target.value)}
-                            />
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="">
-                        <DialogClose asChild>
-                            <Button
-                                type="button"
-                                className="bg-blue-600
+                {totalFiles < Constant.MAX_FREE_FILE ? (
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Create New File</DialogTitle>
+                            <DialogDescription>
+                                <Input
+                                    placeholder="Enter File Name"
+                                    className="mt-3"
+                                    onChange={(e) =>
+                                        setFileInput(e.target.value)
+                                    }
+                                />
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter className="">
+                            <DialogClose asChild>
+                                <Button
+                                    type="button"
+                                    className="bg-blue-600
             hover:bg-blue-700"
-                                disabled={!(fileInput && fileInput.length > 3)}
-                                onClick={() => onFileCreate(fileInput)}
-                            >
-                                Create
-                            </Button>
-                        </DialogClose>
-                    </DialogFooter>
-                </DialogContent>
+                                    disabled={
+                                        !(fileInput && fileInput.length > 3)
+                                    }
+                                    onClick={() => onFileCreate(fileInput)}
+                                >
+                                    Create
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                ) : (
+                    <PricingDialog />
+                )}
             </Dialog>
 
             {/* Progress Bar  */}
