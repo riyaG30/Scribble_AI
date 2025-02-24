@@ -5,6 +5,7 @@ import { ConvexClientProvider } from "./ConvexClientProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+require('dotenv').config();
 
 export const metadata: Metadata = {
     title: "Create Next App",

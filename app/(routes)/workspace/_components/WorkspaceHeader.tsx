@@ -7,7 +7,7 @@ function WorkspaceHeader({ onSave }: any) {
         <div className="p-3 border-b flex justify-between items-center">
             <div className="flex gap-2 items-center">
                 <Image src={"/logo-1.png"} alt="logo" height={40} width={40} />
-                <h2>File Name</h2>
+                <h2>Riya's Workspace</h2>
             </div>
             <div className="flex items-center gap-4">
                 <Button
