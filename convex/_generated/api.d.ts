@@ -23,7 +23,7 @@ import type * as user from "../user.js";
  *
  * Usage:
  * ```js
- * const myFunctionReference = api.myModule.myFunction;
+ * const myFunctionReference = api.myModule.myFunction;hhhhhhjhgjgjhghg
  * ```
  */
 declare const fullApi: ApiFromModules<{
