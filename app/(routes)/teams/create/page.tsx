@@ -28,7 +28,7 @@ function CreateTeam() {
     };
     return (
         <div className=" px-6 md:px-16 my-16">
-            <Image src="/logo-black.png" alt="logo" width={200} height={200} />
+            <Image src="/logo-1.png" alt="logo" width={200} height={200} />
             <div className="flex flex-col items-center mt-8">
                 <h2 className="font-bold text-[40px] py-3">
                     What should we call your team?
