@@ -6,7 +6,7 @@ const getAccessToken = async () => {
     
     const body = new URLSearchParams({
         grant_type: "urn:ibm:params:oauth:grant-type:apikey",
-        apikey: "EVz-U8Dzwkj5nEJYmLduGwKY18gOsKwkM_5nvVlsr-78", // Replace with actual API key
+        apikey: process.env.NEXT_PUBLIC_GENERATE_TEXT_API || "", // Replace with actual API key
     });
 
     try {

@@ -8,7 +8,8 @@ const getAccessToken = async () => {
     
     const body = new URLSearchParams({
         grant_type: "urn:ibm:params:oauth:grant-type:apikey",
-        apikey: "1tCTLW0VivxpdKUzb03KdCGc5P9f5NN5PoEk5CywVfaf", // Replace with actual API key
+		apikey: process.env.NEXT_PUBLIC_GENERATE_TEXT_API || "",
+		
     });
 
     try {
@@ -19,10 +20,13 @@ const getAccessToken = async () => {
         });
 
         if (!response.ok) {
+			console.log("riya ka api", process.env.NEXT_PUBLIC_GENERATE_TEXT_API);
+
             throw new Error(`Error fetching token: ${response.statusText}`);
         }
 
         const data = await response.json();
+		console.log("riya ka token", data.accessToken);
         return data.access_token; // Extract and return the access token
     } catch (error) {
         console.error("Error fetching access token:", error);
