@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Search, Send } from "lucide-react";
 import Image from "next/image";
