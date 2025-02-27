@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter } from "next/font/google"; 
 import { Toaster } from "sonner";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import "./globals.css";
