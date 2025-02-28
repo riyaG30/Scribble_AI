@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
     if (!(await isAuthenticated())) {
         if (request.nextUrl.pathname !== "/api/auth/login") {
             return NextResponse.redirect(
-                new URL("/api/auth/login?post_login_redirect_url=/dashboard", request.url)
+                new URL("post_login_redirect_url/dashboard", request.url)
             );
         }
     }

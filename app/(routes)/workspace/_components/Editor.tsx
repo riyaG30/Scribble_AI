@@ -19,8 +19,7 @@ import { toast } from "sonner";
 import { FILE } from "../../dashboard/_components/FileList";
 const Header = require("editorjs-header-with-alignment");
 import jsPDF from "jspdf";
-import checkmarkImage from '/check-mark.png';
-import html2canvas from "html2canvas";
+
 
 const rawDocument = {
     time: 1550476186479,
@@ -44,15 +43,20 @@ const rawDocument = {
     version: "2.8.1",
 };
 
-function Editor({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any; fileId: any; fileData: FILE }) {
+function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSaveTrigger: any; fileId: any; fileData: FILE ;aiAnalysisResult: string; }) {
     const ref = useRef<EditorJS>();
     const updateDocument = useMutation(api.files.updateDocument);
     const [document, setDocument] = useState(rawDocument);
-
+    useEffect(() => {
+        console.log("Editor received aiAnalysisResult:", aiAnalysisResult);
+      }, [aiAnalysisResult]);
     useEffect(() => {
         fileData && initEditor();
     }, [fileData]);
-
+   
+      
+     
+      
     useEffect(() => {
         onSaveTrigger && onSaveDocument();
     }, [onSaveTrigger]);
@@ -345,7 +349,50 @@ function Editor({ onSaveTrigger, fileId, fileData }: { onSaveTrigger: any; fileI
     
     
     
-    
+    useEffect(() => {
+        if (ref.current && aiAnalysisResult) {
+          ref.current
+            .save()
+            .then((outputData: any) => {
+              // Find the index of an existing AI Analysis header block
+              const aiIndex = outputData.blocks.findIndex(
+                (block: any) => block.type === "header" && block.data.text === "AI Analysis Output:"
+              );
+      
+              // If found, remove this header and all blocks after it
+              if (aiIndex !== -1) {
+                outputData.blocks.splice(aiIndex);
+              }
+      
+              // Append a new header block (big and bold) at the end
+              outputData.blocks.push({
+                type: "header",
+                data: { text: "AI Analysis Output:", level: 2 },
+              });
+      
+              // Split the AI output by newline characters and append each non-empty line as a paragraph
+              aiAnalysisResult
+                .split("\n")
+                .filter((line) => line.trim())
+                .forEach((line) => {
+                  outputData.blocks.push({
+                    type: "paragraph",
+                    data: { text: line },
+                  });
+                });
+      
+              // Re-render the editor with the updated document data
+              (ref.current as any).render(outputData);
+              console.log("Refreshed AI Analysis Output at the bottom of the document.");
+            })
+            .catch((error: any) => {
+              console.error("Error saving editor data:", error);
+            });
+        }
+      }, [aiAnalysisResult]);
+      
+      
+      
     
 
     return (
