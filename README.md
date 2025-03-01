@@ -6,7 +6,7 @@ This **Next.js** application is an AI-powered productivity tool that integrates 
 
 The project is built with Kinde for authentication, **Convex for real-time database storage**, and leverages **middleware for authentication and authorization**. Additionally, it supports **containerized deployment using Podman** for efficient scalability.
 
-## Features
+## 🎯 Features
 
 - 🔐 **User Authentication** with Kinde
 - 🔄 Middleware for authentication and authorization
@@ -55,23 +55,23 @@ Ensure you have the following installed:
 - Yarn or npm
 - Podman (for containerization)
 
-### Steps
+## 📌 Setup 
 
-1. Clone the repository:
+### 1️⃣ Clone the Repository  
    ```bash
    git clone https://github.ibm.com/Riya-Gupta3010/Scribble.git
    ```
-2. Navigate to the project folder:
+### 2️⃣Navigate to the project folder:
    ```bash
    cd Scribble
    ```
-3. Install dependencies:
+### 3️⃣ Install Dependencies  
    ```bash
    npm install
    # or
    yarn install
    ```
-4. Set up environment variables:
+## 📌 Environment Variables  
    - Create a `.env.local` file in the root directory.
    - Add the required API keys and credentials.
    ```env
@@ -87,14 +87,14 @@ Ensure you have the following installed:
    CONVEX_DEPLOYMENT=dev:glad-fish-700 
    NEXT_PUBLIC_GENERATE_ENGLISH_API=your-api-key
    ```
-5. Start the development server:
+## 🚀 Running the Application 
    ```bash
    npm run dev
    # or
    yarn dev
    ```
 
-## Dockerization
+## 📦 Dockerization
 
 This project is containerized using **Podman**.
 
@@ -110,7 +110,7 @@ Ensure that you add the required **environment variable values** and **credentia
    podman run -p 3000:3000 scribble:v1
    ```
 
-## Usage
+## 🎯 Usage 
 
 1. **Sign up / Login** using Kinde authentication.
 2. **Create folders and files** inside the system.
@@ -118,7 +118,7 @@ Ensure that you add the required **environment variable values** and **credentia
 4. **Use the Canvas** for drawing and AI-powered analysis.
 5. **Export images** locally.
 
-## Deployment
+## 🚀 Deployment 
 
 To deploy the project:
 
@@ -128,18 +128,7 @@ npm start
 ```
 
 For **Vercel**, simply push to GitHub and connect the repository in the Vercel dashboard.
-
-## Contributing
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit changes.
-4. Open a pull request.
-
 ## Screenshots
-
-
-
 - **Landing Page**
 ![Landing Page](public/landing.jpeg)
 - **Login Page**
@@ -148,7 +137,16 @@ For **Vercel**, simply push to GitHub and connect the repository in the Vercel d
 ![Dashboard](public/dashboard.jpeg)
 - **Document Editor & Canvas**
 ![Document](public/document.jpeg)
-## License
 
-This project is licensed under the MIT License.
+## 👥 Contributing  
+Contributions are welcome! To contribute:
+1️⃣ **Fork** this repository.
+2️⃣ **Create a feature branch** (`git checkout -b feature-name`).
+3️⃣ **Commit your changes** (`git commit -m "Add new feature"`).
+4️⃣ **Push to the branch** (`git push origin feature-name`).
+5️⃣ **Open a Pull Request**.
 
+
+
+## 📜 License  
+This project is open for modification and use according to your needs.
