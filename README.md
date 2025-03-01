@@ -2,7 +2,9 @@
 
 ## Overview
 
-A **Next.js** application that integrates **AI agents using Watsonx.ai** to automate performance monitoring and improve system efficiency. The project uses **Kinde for authentication**, **Convex as the database**, and **middleware for authentication and authorization**.
+This **Next.js** application is an AI-powered productivity tool that integrates **Watsonx.ai** agents to enhance content generation, grammar correction, and visual analysis. It enables users to create and manage structured documents while also allowing AI-assisted sketching and image analysis in an interactive canvas.
+
+The project is built with Kinde for authentication, **Convex for real-time database storage**, and leverages **middleware for authentication and authorization**. Additionally, it supports **containerized deployment using Podman** for efficient scalability.
 
 ## Features
 
