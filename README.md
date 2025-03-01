@@ -135,7 +135,7 @@ For **Vercel**, simply push to GitHub and connect the repository in the Vercel d
 
 ## Screenshots
 
-Include screenshots of the following pages:
+
 
 - **Landing Page**
 ![Landing Page](public/landing.jpeg)
