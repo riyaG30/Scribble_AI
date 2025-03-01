@@ -98,6 +98,9 @@ Ensure you have the following installed:
 
 This project is containerized using **Podman**.
 
+### Before You Start
+Ensure that you add the required **environment variable values** and **credentials** in the Dockerfile before building the container. This is necessary for a proper build of the Next.js app.
+
 1. Build the container:
    ```bash
    podman build --arch amd64 -t "scribble:v1" .
