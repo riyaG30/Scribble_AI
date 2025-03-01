@@ -100,11 +100,11 @@ This project is containerized using **Podman**.
 
 1. Build the container:
    ```bash
-   podman build -t your-project .
+   podman build --arch amd64 -t "scribble:v1" ..
    ```
 2. Run the container:
    ```bash
-   podman run -p 3000:3000 your-project
+   podman run -p 3000:3000 scribble:v1
    ```
 
 ## Usage
