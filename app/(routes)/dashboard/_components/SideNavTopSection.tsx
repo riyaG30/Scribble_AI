@@ -22,7 +22,7 @@ function SideNavTopSection({ user, setActiveTeamInfo }: any) {
     const menu = [
         {
             id: 1,
-            name: "Create Team",
+            name: "Create Folder",
             path: "/teams/create",
             icon: Users,
         },

@@ -31,15 +31,15 @@ function CreateTeam() {
             <Image src="/logo-1.png" alt="logo" width={200} height={200} />
             <div className="flex flex-col items-center mt-8">
                 <h2 className="font-bold text-[40px] py-3">
-                    What should we call your team?
+                    What should we call your Folder?
                 </h2>
                 <h2 className="text-gray-500">
                     You can always change this later from settings.
                 </h2>
                 <div className="mt-7 w-[40%]">
-                    <label className="text-gray-500">Team Name</label>
+                    <label className="text-gray-500">Folder Name</label>
                     <Input
-                        placeholder="Team Name"
+                        placeholder="Folder Name"
                         className="mt-3"
                         onChange={(e) => setTeamName(e.target.value)}
                     />
@@ -49,7 +49,7 @@ function CreateTeam() {
                     disabled={!(teamName && teamName?.length > 0)}
                     onClick={() => createNewTeam()}
                 >
-                    Create Team
+                    Create Folder
                 </Button>
             </div>
         </div>
