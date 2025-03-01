@@ -27,6 +27,13 @@ function Canvas({
             whiteboard: JSON.stringify(whiteBoardData),
         }).then((resp) => console.log(resp));
     };
+    const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null; // Prevents SSR execution
     const analyzeImage = async (imageData: string) => {
         try {
             console.log("📤 Sending image data to API...");

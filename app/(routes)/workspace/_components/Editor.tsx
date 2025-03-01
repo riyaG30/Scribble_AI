@@ -48,15 +48,11 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
     const updateDocument = useMutation(api.files.updateDocument);
     const [document, setDocument] = useState(rawDocument);
     useEffect(() => {
-        console.log("Editor received aiAnalysisResult:", aiAnalysisResult);
+        // console.log("Editor received aiAnalysisResult:", aiAnalysisResult); 
       }, [aiAnalysisResult]);
     useEffect(() => {
         fileData && initEditor();
-    }, [fileData]);
-   
-      
-     
-      
+    }, [fileData]);    
     useEffect(() => {
         onSaveTrigger && onSaveDocument();
     }, [onSaveTrigger]);
@@ -102,7 +98,6 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
         });
         ref.current = editor;
     };
-
     const onSaveDocument = () => {
         if (ref.current) {
             ref.current
@@ -135,205 +130,158 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
             });
     
             const margin = 12; // 1.2cm margin
-            const borderThickness = 1.2; // Increased border thickness
-            const contentMargin = margin + 5; // Ensures content stays inside
-            const pageWidth = 210 - 2 * margin; // A4 width minus margins
-            const pageHeight = 297 - 2 * margin; // A4 height minus margins
-            let y = margin + 10; // Added extra space before content
+            const borderThickness = 1.2; 
+            const contentMargin = margin + 5; 
+            const pageWidth = 210 - 2 * margin;
+            const pageHeight = 297 - 2 * margin;
+            let y = margin + 10; // Initial Y position with extra space
     
             // Function to draw thick border
             const drawBorder = () => {
-                doc.setDrawColor(0); // Black color
-                doc.setLineWidth(borderThickness); // Set border thickness
-                doc.rect(margin, margin, pageWidth, pageHeight); // Draw border
+                doc.setDrawColor(0);
+                doc.setLineWidth(borderThickness);
+                doc.rect(margin, margin, pageWidth, pageHeight);
             };
-            function decodeHTML(html: string): string {
-                return html.replace(/&nbsp;/g, " ")
-                           .replace(/&lt;/g, "<")
-                           .replace(/&gt;/g, ">")
-                           .replace(/&amp;/g, "&")
-                           .replace(/&quot;/g, '"')
-                           .replace(/&#39;/g, "'");
-            }
     
             drawBorder(); // Draw border on first page
+    
+            const moveToNextPage = () => {
+                doc.addPage();
+                drawBorder();
+                y = margin + 10; // Reset Y position on the new page
+            };
     
             outputData.blocks.forEach((block) => {
                 if (["button"].includes(block.type)) return;
     
                 doc.setFontSize(14);
     
-                // Check for page overflow and create new page if needed
-                if (y > pageHeight + margin - 15) {
-                    doc.addPage();
-                    drawBorder();
-                    y = margin + 10; // Reset Y position with extra space
-                }
-                const decodeHTML = (htmlString: string): string => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlString, "text/html");
-                    return doc.body.textContent || "";
-                };
-                
                 switch (block.type) {
                     case "paragraph":
-    const paragraphText = he.decode(block.data.text || "No content"); // Decode HTML entities
-    const wrappedParagraph = doc.splitTextToSize(paragraphText, pageWidth - 10);
-
-    doc.text(wrappedParagraph, contentMargin, y);
-    y += wrappedParagraph.length * 6;
-    break;
-
-                        case "header":
-                            doc.setFontSize(20);
-                            const text = block.data.text || "No title";
-                            const textWidth = doc.getTextWidth(text);  // Get the width of the text
-                            const textHeight = 10;  // Set a height for the underline (adjust if needed)
-                            
-                            // Draw the text
-                            doc.text(text, contentMargin, y);
-                            
-                            // Draw a line underneath the text for the underline effect
-                            doc.line(contentMargin, y + 2, contentMargin + textWidth, y + 2);  // Adjust 'y + 2' for distance from text
-                        
-                            y += 10;
-                            
-                        
+                        const paragraphText = he.decode(block.data.text || "No content");
+                        const wrappedParagraph = doc.splitTextToSize(paragraphText, pageWidth - 10);
+                        const paragraphHeight = wrappedParagraph.length * 6;
+    
+                        if (y + paragraphHeight > pageHeight + margin) {
+                            moveToNextPage();
+                        }
+    
+                        doc.text(wrappedParagraph, contentMargin, y);
+                        y += paragraphHeight + 4;
                         break;
-                        case "quote":
-                            doc.setFontSize(16);
-                            doc.setFont("italic");
-                        
-                            // Function to decode HTML entities
-                            const decodeHTML = (htmlString: string): string => {
-                                const parser = new DOMParser();
-                                const doc = parser.parseFromString(htmlString, "text/html");
-                                return doc.body.textContent || "";
-                            };
-                        
-                            // Decode the quote text
-                            const quoteText = decodeHTML(`"${block.data.text}"` || "No quote provided");
-                        
-                            // If there's an author, append it to the quote
-                            let fullText = quoteText;
-                            if (block.data.caption) {
-                                const decodedCaption = decodeHTML(block.data.caption);
-                                fullText += ` — ${decodedCaption}`; // Add author with a dash separator
+    
+                    case "header":
+                        doc.setFontSize(20);
+                        const text = block.data.text || "No title";
+                        const textWidth = doc.getTextWidth(text);
+                        const headerHeight = 12;
+    
+                        if (y + headerHeight > pageHeight + margin) {
+                            moveToNextPage();
+                        }
+    
+                        doc.text(text, contentMargin, y);
+                        doc.line(contentMargin, y + 2, contentMargin + textWidth, y + 2);
+                        y += headerHeight;
+                        break;
+    
+                    case "quote":
+                        doc.setFontSize(16);
+                        doc.setFont("italic");
+    
+                        const quoteText = he.decode(block.data.text || "No quote provided");
+                        let fullText = quoteText;
+                        if (block.data.caption) {
+                            const decodedCaption = he.decode(block.data.caption);
+                            fullText += ` — ${decodedCaption}`;
+                        }
+    
+                        const wrappedQuote = doc.splitTextToSize(fullText, pageWidth - 10);
+                        const quoteHeight = wrappedQuote.length * 6 + 4;
+    
+                        if (y + quoteHeight > pageHeight + margin) {
+                            moveToNextPage();
+                        }
+    
+                        doc.text(wrappedQuote, contentMargin, y);
+                        y += quoteHeight;
+                        doc.setFont("normal");
+                        break;
+    
+                    case "checklist":
+                        block.data.items.forEach((item: { checked: any; text: string | string[]; }) => {
+                            const checklistHeight = 12;
+                            if (y + checklistHeight > pageHeight + margin) {
+                                moveToNextPage();
                             }
-                        
-                            // Wrap text to fit within page width
-                            const wrappedText = doc.splitTextToSize(fullText, pageWidth - 10);
-                            doc.text(wrappedText, contentMargin, y);
-                            y += wrappedText.length * 6 + 4;
-                        
-                            doc.setFont("normal"); // Reset font after quote
-                            break;
-                        
-
-                        
-                        
-                            case "checklist":
-                                y += 6;
-                                block.data.items.forEach((item: { text: string; checked: boolean }) => {
-                                    if (y > pageHeight + margin - 15) {
-                                        doc.addPage();
-                                        drawBorder();
-                                        y = margin + 6;
-                                    }
-                            
-                                    // Set the font for regular text
-                                    doc.setFont("helvetica", "normal");
-                            
-                                    // Define common properties for images
-                                    const iconWidth = 5;  // Slightly larger for better visibility
-                                    const iconHeight = 5; // Matching size
-                                    const iconX = contentMargin + 1;  // Adjusted position for better alignment
-                                    const iconY = y - 2;  // Fine-tuned vertical alignment
-                            
-                                    const iconPath = item.checked ? "/check-mark.png" : "/close.png";
-                            
-                                    // Add the appropriate image
-                                    doc.addImage(iconPath, "PNG", iconX, iconY, iconWidth, iconHeight);
-                            
-                                    // Draw the text next to the icon with proper spacing
-                                    doc.text(item.text, contentMargin + 12, y + 1); // Slightly lower text for alignment
-                            
-                                    y += 12; // More spacing for better readability
-                                });
-                                break;
-                            
-                            
-
-                            
-                            
-                            
-
     
-                                case "writeMail":
-                                    // Set font size for email scenario
-                                    y += 6;
-                                    doc.setFontSize(22);
-                                    const emailScenario = doc.splitTextToSize(block.data.scenario || "No scenario provided", pageWidth - 10);
-                                    
-                                    // Get the width of the email scenario text (for underlining)
-                                    const scenarioTextWidth = doc.getTextWidth(emailScenario.join(' '));  // Combine lines for full width
-                                    
-                                    // Write the email scenario text
-                                    doc.text(emailScenario, contentMargin, y);
-                                    
-                                    // Draw the underline for email scenario
-                                    doc.line(contentMargin, y + 2, contentMargin + scenarioTextWidth, y + 2);  // Adjust the y + 2 for distance
-                                    
-                                    y += emailScenario.length * 6 + 3;
-                                
-                                    // Set font size for generated email
-                                    doc.setFontSize(14);
-                                    const generatedEmail = doc.splitTextToSize(block.data.email || "No email generated", pageWidth - 10);
-                                    doc.text(generatedEmail, contentMargin, y);
-                                    
-                                    y += generatedEmail.length * 6 + 10;
-                                    break;
-                                
+                            const iconPath = item.checked ? "/check-mark.png" : "/close.png";
+                            doc.addImage(iconPath, "PNG", contentMargin + 1, y - 2, 5, 5);
+                            doc.text(item.text, contentMargin + 12, y + 1);
+                            y += checklistHeight;
+                        });
+                        break;
     
-                                    case "English":  // Ensure it matches the exact case
-                                   
-                                
-                                    if (!block.data || (!block.data.scenario && !block.data.correctedText)) {
-                                        console.log("❌ No valid English correction data found.");
-                                        break;
-                                    }
-                                
-                                    doc.setFontSize(16);
-                                    doc.setFont("helvetica", "bold");
-                                    doc.text("English Correction", contentMargin, y);
-                                    y += 8;
-                                
-                                    doc.setFontSize(14);
-                                    doc.setFont("helvetica", "normal");
-                                
-                                    if (block.data.scenario) {
-                                        console.log("✅ Scenario:", block.data.scenario);
-                                        const scenarioText = doc.splitTextToSize("Scenario: " + block.data.scenario, pageWidth - 10);
-                                        doc.text(scenarioText, contentMargin, y);
-                                        y += scenarioText.length * 6 + 4;
-                                    }
-                                
-                                    if (block.data.correctedText) {
-                                        console.log("✅ Corrected Text:", block.data.correctedText);
-                                        doc.setFontSize(14);
-                                        doc.setTextColor(0, 102, 255); // Blue color for corrected text
-                                        const correctedText = doc.splitTextToSize("Corrected: " + block.data.correctedText, pageWidth - 10);
-                                        doc.text(correctedText, contentMargin, y);
-                                        doc.setTextColor(0, 0, 0); // Reset color
-                                        y += correctedText.length * 6 + 6;
-                                    }
-                                    break;
-                                
-                                    
-                                    
-                                    
+                    case "writeMail":
+                        doc.setFontSize(22);
+                        const emailScenario = doc.splitTextToSize(block.data.scenario || "No scenario provided", pageWidth - 10);
+                        const scenarioHeight = emailScenario.length * 6 + 3;
     
-                    
+                        if (y + scenarioHeight > pageHeight + margin) {
+                            moveToNextPage();
+                        }
+    
+                        doc.text(emailScenario, contentMargin, y);
+                        doc.line(contentMargin, y + 2, contentMargin + doc.getTextWidth(emailScenario.join(" ")), y + 2);
+                        y += scenarioHeight;
+    
+                        doc.setFontSize(14);
+                        const generatedEmail = doc.splitTextToSize(block.data.email || "No email generated", pageWidth - 10);
+                        const emailHeight = generatedEmail.length * 6 + 10;
+    
+                        if (y + emailHeight > pageHeight + margin) {
+                            moveToNextPage();
+                        }
+    
+                        doc.text(generatedEmail, contentMargin, y);
+                        y += emailHeight;
+                        break;
+    
+                    case "English":
+                        if (!block.data || (!block.data.scenario && !block.data.correctedText)) break;
+    
+                        doc.setFontSize(16);
+                        doc.setFont("helvetica", "bold");
+                        const titleHeight = 8;
+                        if (y + titleHeight > pageHeight + margin) moveToNextPage();
+                        doc.text("English Correction", contentMargin, y);
+                        y += titleHeight;
+    
+                        doc.setFontSize(14);
+                        doc.setFont("helvetica", "normal");
+    
+                        if (block.data.scenario) {
+                            const scenarioText = doc.splitTextToSize("Scenario: " + block.data.scenario, pageWidth - 10);
+                            const scenarioHeight = scenarioText.length * 6 + 4;
+    
+                            if (y + scenarioHeight > pageHeight + margin) moveToNextPage();
+    
+                            doc.text(scenarioText, contentMargin, y);
+                            y += scenarioHeight;
+                        }
+    
+                        if (block.data.correctedText) {
+                            doc.setTextColor(0, 102, 255);
+                            const correctedText = doc.splitTextToSize("Corrected: " + block.data.correctedText, pageWidth - 10);
+                            const correctedTextHeight = correctedText.length * 6 + 6;
+    
+                            if (y + correctedTextHeight > pageHeight + margin) moveToNextPage();
+    
+                            doc.text(correctedText, contentMargin, y);
+                            doc.setTextColor(0, 0, 0);
+                            y += correctedTextHeight;
+                        }
+                        break;
                 }
             });
     
@@ -343,12 +291,7 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
         });
     };
     
-    
-    
-    
-    
-    
-    
+
     useEffect(() => {
         if (ref.current && aiAnalysisResult) {
           ref.current
@@ -390,11 +333,6 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
             });
         }
       }, [aiAnalysisResult]);
-      
-      
-      
-    
-
     return (
         <div>
             <div id="editorjs" className="ml-20"></div>
