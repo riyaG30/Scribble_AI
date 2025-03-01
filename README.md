@@ -100,7 +100,7 @@ This project is containerized using **Podman**.
 
 1. Build the container:
    ```bash
-   podman build --arch amd64 -t "scribble:v1" ..
+   podman build --arch amd64 -t "scribble:v1" .
    ```
 2. Run the container:
    ```bash
