@@ -28,20 +28,6 @@ COPY --chown=1001:1001 postcss.config.mjs /app/postcss.config.mjs
 
 
 
-ENV KINDE_CLIENT_ID=4627db1c9d2c459eb99522bb863285ed
-ENV KINDE_CLIENT_SECRET=VKqG9fHGTaPaNGLH5BYnHOusNwETXpCdpmyZdnxXk1tNGnhGvZ2W
-ENV KINDE_ISSUER_URL=https://riyagupta.kinde.com
-ENV KINDE_SITE_URL=http://localhost:3000
-ENV KINDE_POST_LOGOUT_REDIRECT_URL=http://localhost:3000
-ENV KINDE_POST_LOGIN_REDIRECT_URL=http://localhost:3000/dashboard
-ENV CONVEX_DEPLOYMENT=dev:glad-fish-700 
-ENV NEXT_PUBLIC_CONVEX_URL=https://glad-fish-700.convex.cloud
-
-ENV NEXT_PUBLIC_GENERATE_TEXT_API=1tCTLW0VivxpdKUzb03KdCGc5P9f5NN5PoEk5CywVfaf
-
-ENV NEXT_PUBLIC_GENERATE_ENGLISH_API=1tCTLW0VivxpdKUzb03KdCGc5P9f5NN5PoEk5CywVfaf
-
-
 # Build the Next.js application
 RUN npm run build
 
