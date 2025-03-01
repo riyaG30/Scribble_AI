@@ -78,7 +78,7 @@ Ensure you have the following installed:
    NEXT_PUBLIC_KINDE_DOMAIN=your-kinde-domain
    NEXT_PUBLIC_CONVEX_URL=your-convex-url
    NEXT_PUBLIC_GENERATE_TEXT_API=your-api-key
-   KINDE_CLIENT_ID=
+   KINDE_CLIENT_ID=your-kinde-client-id
    KINDE_CLIENT_SECRET=your kinde-secret-key
    KINDE_ISSUER_URL=your-kinde-url
    KINDE_SITE_URL=http://localhost:3000
