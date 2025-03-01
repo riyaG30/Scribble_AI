@@ -1,4 +1,4 @@
-# Project Name
+# Scribble
 
 ## Overview
 
@@ -136,10 +136,13 @@ For **Vercel**, simply push to GitHub and connect the repository in the Vercel d
 Include screenshots of the following pages:
 
 - **Landing Page**
+![Landing Page](public/landing.jpeg)
 - **Login Page**
+![Login Page](public/login.jpeg)
 - **Dashboard**
+![Dashboard](public/dashboard.jpeg)
 - **Document Editor & Canvas**
-
+![Document](public/document.jpeg)
 ## License
 
 This project is licensed under the MIT License.
