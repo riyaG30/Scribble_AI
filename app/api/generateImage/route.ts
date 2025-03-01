@@ -16,11 +16,11 @@ const getAccessToken = async (): Promise<string | null> => {
     });
 
     try {
-        console.log("📡 Fetching access token...");
+        // console.log("📡 Fetching access token...");
 
         const response = await fetch(url, { method: "POST", headers, body });
 
-        console.log("🔄 Token Response Status:", response.status);
+        // console.log("🔄 Token Response Status:", response.status);
 
         if (!response.ok) {
             const errorData = await response.text();
@@ -29,7 +29,7 @@ const getAccessToken = async (): Promise<string | null> => {
         }
 
         const data = await response.json();
-        console.log("✅ Token Retrieved:", data.access_token ? "Success" : "Failed");
+        // console.log("✅ Token Retrieved:", data.access_token ? "Success" : "Failed");
 
         return data.access_token;
     } catch (error) {
@@ -40,17 +40,17 @@ const getAccessToken = async (): Promise<string | null> => {
 
 export async function POST(req: Request) {
     try {
-        console.log("📩 Received API Request for Image Analysis...");
+        // console.log("📩 Received API Request for Image Analysis...");
 
         const requestBody = await req.json();
-        console.log("📜 Request Body:", requestBody);
+        // console.log("📜 Request Body:", requestBody);
 
         if (!requestBody || typeof requestBody.imageData !== "string") {
             console.error("❌ Invalid request: Missing 'imageData'");
             return NextResponse.json({ error: "Invalid request: Missing 'imageData'" }, { status: 400 });
         }
 
-        console.log("🔑 Requesting Access Token...");
+        // console.log("🔑 Requesting Access Token...");
         const accessToken = await getAccessToken();
 
         if (!accessToken) {
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Failed to retrieve access token" }, { status: 500 });
         }
 
-        console.log("📡 Calling IBM Vision AI API...");
+        // console.log("📡 Calling IBM Vision AI API...");
 
         const url = "https://us-south.ml.cloud.ibm.com/ml/v1/text/chat?version=2023-05-29";
         const headers = {
@@ -88,12 +88,12 @@ export async function POST(req: Request) {
             top_p: 1,
         });
 
-        console.log("📤 Sending request to IBM API...");
-        console.log("🔍 Request Body:", body);
+        // console.log("📤 Sending request to IBM API..."); 
+        // console.log("🔍 Request Body:", body);
 
         const response = await fetch(url, { headers, method: "POST", body });
 
-        console.log("🔄 IBM API Response Status:", response.status);
+        // console.log("🔄 IBM API Response Status:", response.status);
 
         if (!response.ok) {
             const errorData = await response.text();
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
         const responseData = await response.json();
         const aiResponse = responseData.choices?.[0]?.message?.content || "No output received";
 
-        console.log("✅ AI Image Analysis Response:", aiResponse);
+        // console.log("✅ AI Image Analysis Response:", aiResponse);
 
         return NextResponse.json({ output: aiResponse }, { status: 200 });
     } catch (error) {

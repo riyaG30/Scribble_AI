@@ -27,7 +27,7 @@ export const generateText = async () => {
 	if (!response.ok) {
 		throw new Error("Non-200 response");
 	}
-    print("respnse getting printed",response.json);
+    // print("respnse getting printed",response.json);
 	return await response.json();
 }
 

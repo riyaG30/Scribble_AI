@@ -16,11 +16,11 @@ const getAccessToken = async (): Promise<string | null> => {
     });
 
     try {
-        console.log("📡 Fetching access token...");
+        // console.log("📡 Fetching access token...");
 
         const response = await fetch(url, { method: "POST", headers, body });
 
-        console.log("🔄 Token Response Status:", response.status);
+        // console.log("🔄 Token Response Status:", response.status);
 
         if (!response.ok) {
             const errorData = await response.text();
@@ -29,7 +29,7 @@ const getAccessToken = async (): Promise<string | null> => {
         }
 
         const data = await response.json();
-        console.log("✅ Token Retrieved:", data.access_token ? "Success" : "Failed");
+        // console.log("✅ Token Retrieved:", data.access_token ? "Success" : "Failed");
 
         return data.access_token;
     } catch (error) {
@@ -40,17 +40,17 @@ const getAccessToken = async (): Promise<string | null> => {
 
 export async function POST(req: Request) {
     try {
-        console.log("📩 Received API Request...");
+        // console.log("📩 Received API Request...");
 
         const requestBody = await req.json();
-        console.log("📜 Request Body:", requestBody);
+        // console.log("📜 Request Body:", requestBody);
 
         if (!requestBody || typeof requestBody.customTopic !== "string") {
             console.error("❌ Invalid request: Missing 'customTopic'");
             return NextResponse.json({ error: "Invalid request: Missing 'customTopic'" }, { status: 400 });
         }
 
-        console.log("🔑 Requesting Access Token...");
+        // console.log("🔑 Requesting Access Token...");
         const accessToken = await getAccessToken();
 
         if (!accessToken) {
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Failed to retrieve access token" }, { status: 500 });
         }
 
-        console.log("📡 Calling IBM Text Generation API...");
+        // console.log("📡 Calling IBM Text Generation API...");
 
         const url = "https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29";
         const headers = {
@@ -93,12 +93,12 @@ export async function POST(req: Request) {
             }
         });
 
-        console.log("📤 Sending request to IBM API...");
-        console.log("🔍 Request Body:", body);
+        // console.log("📤 Sending request to IBM API...");
+        // console.log("🔍 Request Body:", body);
 
         const response = await fetch(url, { headers, method: "POST", body });
 
-        console.log("🔄 IBM API Response Status:", response.status);
+        // console.log("🔄 IBM API Response Status:", response.status);
 
         if (!response.ok) {
             const errorData = await response.text();
@@ -109,7 +109,7 @@ export async function POST(req: Request) {
         const responseData = await response.json();
         const generatedText = responseData.results?.[0]?.generated_text || "No output received";
 
-        console.log("✅ AI Response:", generatedText);
+        // console.log("✅ AI Response:", generatedText);
 
         return NextResponse.json({ output: generatedText }, { status: 200 });
     } catch (error) {

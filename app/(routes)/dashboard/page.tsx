@@ -27,7 +27,7 @@ const Dashboard = () => {
             createUser({
                 name: user.given_name,
                 email: user.email,
-                image: user.picture,
+                image: user.image ? user.image : "/rg-logo.jpg", // ✅ Use provided image if available, else fallback
             }).then((resp) => {
                 console.log(resp);
             });

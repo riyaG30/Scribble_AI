@@ -79,7 +79,8 @@ function FileList() {
                                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                                         {user && (
                                             <Image
-                                                src={user?.picture}
+                                                src={(user?.picture)?user.picture : "/rg-logo.jpg"} 
+                                                
                                                 alt="user"
                                                 width={30}
                                                 height={30}
