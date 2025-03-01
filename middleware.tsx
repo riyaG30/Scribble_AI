@@ -14,12 +14,17 @@ export async function middleware(request: NextRequest) {
         return response;
     }
 
-    // Prevent infinite redirect loop
-    if (!(await isAuthenticated())) {
+    const isAuth = await isAuthenticated();
+
+    if (!isAuth) {
         if (request.nextUrl.pathname !== "/api/auth/login") {
-            return NextResponse.redirect(
-                new URL("post_login_redirect_url/dashboard", request.url)
-            );
+            return NextResponse.redirect(new URL("/api/auth/login", request.url));
+        }
+    } else {
+        // Redirect to the post-login URL if authenticated
+        const postLoginRedirectUrl = process.env.KINDE_POST_LOGIN_REDIRECT_URL || "/dashboard";
+        if (request.nextUrl.pathname === "/api/auth/login") {
+            return NextResponse.redirect(new URL(postLoginRedirectUrl, request.url));
         }
     }
 

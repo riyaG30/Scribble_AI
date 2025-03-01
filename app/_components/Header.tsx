@@ -16,7 +16,7 @@ function Header() {
                                     href="#"
                                 >
                                     {" "}
-                                    About{" "}
+                                    {" "}
                                 </a>
                             </li>
 
@@ -26,7 +26,7 @@ function Header() {
                                     href="#"
                                 >
                                     {" "}
-                                    Careers{" "}
+                                    {" "}
                                 </a>
                             </li>
 
@@ -36,7 +36,7 @@ function Header() {
                                     href="#"
                                 >
                                     {" "}
-                                    History{" "}
+                                    {" "}
                                 </a>
                             </li>
 
@@ -46,7 +46,7 @@ function Header() {
                                     href="#"
                                 >
                                     {" "}
-                                    Services{" "}
+                                    {" "}
                                 </a>
                             </li>
 
@@ -56,7 +56,7 @@ function Header() {
                                     href="#"
                                 >
                                     {" "}
-                                    Projects{" "}
+                                    {" "}
                                 </a>
                             </li>
                         </ul>

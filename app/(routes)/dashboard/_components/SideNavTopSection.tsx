@@ -6,11 +6,12 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/convex/_generated/api";
+import { distributeLibraryItemsOnSquareGrid } from "@excalidraw/excalidraw/types/data/library";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs";
 import { useConvex } from "convex/react";
 import { ChevronDown, LayoutGrid, LogOut, Settings, Users } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; 
 import { useEffect, useState } from "react";
 
 export interface TEAM {
@@ -37,6 +38,8 @@ function SideNavTopSection({ user, setActiveTeamInfo }: any) {
     const convex = useConvex();
     const [activeTeam, setActiveTeam] = useState<TEAM>();
     const [teamList, setTeamList] = useState<TEAM[]>();
+    const userImage = user?.picture || "/rg-logo.jpg"; // Fallback image
+    
     useEffect(() => {
         user && getTeamList();
     }, [user]);
@@ -127,10 +130,13 @@ function SideNavTopSection({ user, setActiveTeamInfo }: any) {
                     </div>
                     <Separator className="mt-2 bg-slate-100" />
                     {/* User Info Section  */}
+
+
+
                     {user && (
                         <div className="mt-2 flex gap-2 items-center">
                             <Image
-                                src={user?.picture}
+                                src={userImage}
                                 alt="user"
                                 width={30}
                                 height={30}
