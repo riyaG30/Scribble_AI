@@ -76,7 +76,7 @@ export async function POST(req: Request) {
                 {
                     role: "user",
                     content: [
-                        { type: "text", text: "Explain the picture" },
+                        { type: "text", text: "Summarise the Content" },
                         { type: "image_url", image_url: { url: requestBody.imageData } },
                     ],
                 },
@@ -93,7 +93,7 @@ export async function POST(req: Request) {
 
         const response = await fetch(url, { headers, method: "POST", body });
 
-        // console.log("🔄 IBM API Response Status:", response.status);
+        // console.log("🔄 IBM API Response Status:", response.status); 
 
         if (!response.ok) {
             const errorData = await response.text();
@@ -102,6 +102,7 @@ export async function POST(req: Request) {
         }
 
         const responseData = await response.json();
+        console.log("ansser is ", responseData.choices?.[0]);
         const aiResponse = responseData.choices?.[0]?.message?.content || "No output received";
 
         // console.log("✅ AI Image Analysis Response:", aiResponse);

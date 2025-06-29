@@ -27,7 +27,7 @@ h6.ce-header {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
-
+    @apply bg-background text-foreground;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
 

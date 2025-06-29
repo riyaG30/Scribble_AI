@@ -9,12 +9,13 @@ import Checklist from "@editorjs/checklist";
 import Quote from "@editorjs/quote";
 // @ts-ignore
 import Paragraph from "@editorjs/paragraph";
+import List from "@editorjs/list";
 import he from "he";
 import WriteMailTool from "./WriteMailTool";
 import English from "./English";
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
-
+import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import { FILE } from "../../dashboard/_components/FileList";
 const Header = require("editorjs-header-with-alignment");
@@ -47,17 +48,18 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
     const ref = useRef<EditorJS>();
     const updateDocument = useMutation(api.files.updateDocument);
     const [document, setDocument] = useState(rawDocument);
+    
     useEffect(() => {
-        // console.log("Editor received aiAnalysisResult:", aiAnalysisResult); 
-      }, [aiAnalysisResult]);
-    useEffect(() => {
+        if (typeof window === "undefined") return;
         fileData && initEditor();
     }, [fileData]);    
     useEffect(() => {
+        if (typeof window === "undefined") return;
         onSaveTrigger && onSaveDocument();
     }, [onSaveTrigger]);
 
     const initEditor = () => {
+        if (!document) return;
         const editor = new EditorJS({
             tools: {
                 header: {
@@ -69,6 +71,7 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
                         defaultAlignment: "left",
                     },
                 },
+                list: List,
                 writeMail: {
                     class: WriteMailTool as unknown as { new(config: any): any },
                     inlineToolbar: true,
@@ -291,48 +294,110 @@ function Editor({ onSaveTrigger, fileId, fileData, aiAnalysisResult, }: { onSave
         });
     };
     
-
     useEffect(() => {
-        if (ref.current && aiAnalysisResult) {
-          ref.current
-            .save()
-            .then((outputData: any) => {
-              // Find the index of an existing AI Analysis header block
-              const aiIndex = outputData.blocks.findIndex(
-                (block: any) => block.type === "header" && block.data.text === "AI Analysis Output:"
-              );
-      
-              // If found, remove this header and all blocks after it
-              if (aiIndex !== -1) {
-                outputData.blocks.splice(aiIndex);
-              }
-      
-              // Append a new header block (big and bold) at the end
-              outputData.blocks.push({
-                type: "header",
-                data: { text: "AI Analysis Output:", level: 2 },
-              });
-      
-              // Split the AI output by newline characters and append each non-empty line as a paragraph
-              aiAnalysisResult
-                .split("\n")
-                .filter((line) => line.trim())
-                .forEach((line) => {
-                  outputData.blocks.push({
-                    type: "paragraph",
-                    data: { text: line },
-                  });
+        if (typeof window === "undefined") return; // Ensure client-side execution
+        if (!ref.current || !aiAnalysisResult) return;
+    
+        console.log("🔍 AI Response:", aiAnalysisResult);
+    
+        ref.current
+            ?.save()
+            .then((outputData) => {
+                if (!outputData || !outputData.blocks) return;
+    
+                // Remove previous "AI Analysis Output:" section
+                outputData.blocks = outputData.blocks.filter(
+                    (block) => !(block.type === "header" && block.data.text === "AI Analysis Output:")
+                );
+    
+                // Add new "AI Analysis Output" header
+                outputData.blocks.push({
+                    type: "header",
+                    data: { text: "AI Analysis Output:", level: 2 },
                 });
-      
-              // Re-render the editor with the updated document data
-              (ref.current as any).render(outputData);
-              console.log("Refreshed AI Analysis Output at the bottom of the document.");
+    
+                const lines = aiAnalysisResult.split(/\r?\n/).filter((line) => line.trim() !== "");
+                let listItems: string[] = [];
+                let currentListType: string | null = null;
+    
+                lines.forEach((line) => {
+                    line = line.trim().replace(/\*/g, ""); // Remove all * characters
+    
+                    if (/^\d+\.\s+/.test(line)) {
+                        if (currentListType !== "ordered") {
+                            if (listItems.length > 0) {
+                                outputData.blocks.push({
+                                    type: "list",
+                                    data: { style: currentListType, items: listItems },
+                                });
+                                listItems = [];
+                            }
+                            currentListType = "ordered";
+                        }
+                        listItems.push(line.replace(/^\d+\.\s+/, "").trim());
+                    } else if (/^[\-]\s+/.test(line)) {
+                        if (currentListType !== "unordered") {
+                            if (listItems.length > 0) {
+                                outputData.blocks.push({
+                                    type: "list",
+                                    data: { style: currentListType, items: listItems },
+                                });
+                                listItems = [];
+                            }
+                            currentListType = "unordered";
+                        }
+                        listItems.push(line.replace(/^[\-]\s+/, "").trim());
+                    } else if (/^(.+?):\s*(.+)$/.test(line)) {
+                        if (listItems.length > 0) {
+                            outputData.blocks.push({
+                                type: "list",
+                                data: { style: currentListType, items: listItems },
+                            });
+                            listItems = [];
+                        }
+                        currentListType = "unordered";
+                        const matches = line.match(/^(.+?):\s*(.+)$/);
+                        if (matches) {
+                            listItems.push(`<b>${matches[1]}</b>: ${matches[2]}`);
+                        }
+                    } else {
+                        if (listItems.length > 0) {
+                            outputData.blocks.push({
+                                type: "list",
+                                data: { style: currentListType, items: listItems },
+                            });
+                            listItems = [];
+                        }
+                        currentListType = null;
+                        outputData.blocks.push({
+                            type: "paragraph",
+                            data: { text: line },
+                        });
+                    }
+                });
+    
+                if (listItems.length > 0) {
+                    outputData.blocks.push({
+                        type: "list",
+                        data: { style: currentListType, items: listItems },
+                    });
+                }
+    
+                console.log("📝 Generated Editor.js Blocks:", JSON.stringify(outputData.blocks, null, 2));
+    
+                // Ensure `ref.current` exists before calling methods
+                if (ref.current) {
+                    ref.current.clear();
+                    ref.current.render(outputData);
+                    console.log("✅ AI Analysis Output updated successfully.");
+                }
             })
-            .catch((error: any) => {
-              console.error("Error saving editor data:", error);
+            .catch((error) => {
+                console.error("❌ Error saving editor data:", error);
             });
-        }
-      }, [aiAnalysisResult]);
+    }, [aiAnalysisResult]);
+    
+
     return (
         <div>
             <div id="editorjs" className="ml-20"></div>
